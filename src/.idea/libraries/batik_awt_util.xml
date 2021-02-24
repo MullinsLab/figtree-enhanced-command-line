@@ -1,0 +1,24 @@
+<component name="libraryTable">
+  <library name="batik-awt-util">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../lib/batik-awt-util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../lib/batik-dom.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../lib/batik-ext.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../lib/batik-svggen.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../lib/batik-util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../lib/batik-xml.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../lib/iText.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../lib/jam.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../lib/jdom.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../lib/jebl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../lib/xml-apis.jar!/" />
+      <root url="file://$PROJECT_DIR$/../lib/jwt" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../lib/jwt" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../lib/jwt" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../lib/jwt" recursive="false" type="SOURCES" />
+  </library>
+</component>
