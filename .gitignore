@@ -3,7 +3,25 @@
 build/*
 classes/*
 out/*
-FigTree*
+figtree-pdf.jar
+figtree.war
+figtreepanel.jar
 tests/*
 examples/*
 .DS_Store
+Graphics/FigTree.icns
+Graphics/FigTreeDocIcon.icns
+Graphics/FigTreeDocIcon.psd
+Graphics/FigTreeDocIcon.tif
+Graphics/FigTreeIcon.png
+Graphics/FigTreeIcon.psd
+Graphics/FigTreeIcon.tif
+Graphics/FigTreeScreen.png
+WebRoot/figtree.css
+release/FigTree_v1.4.4.tgz
+release/Linux/
+release/Mac/FigTree v1.4.4/
+release/Mac/QuickLook Plugin/FigTreeQuickLookPlugin.qlgenerator/
+release/Mac/icons/
+release/Windows/
+src/out/
