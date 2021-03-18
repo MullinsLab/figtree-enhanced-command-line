@@ -4,7 +4,7 @@ https://github.com/rambaut/figtree/releases
 
 Command line FigTree summary
 
-Requirements:
+Build Requirements:
 java 8
 
 A current version of figtree.jar can be found in dist/figtree.jar
