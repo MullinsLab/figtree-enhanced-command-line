@@ -88,7 +88,11 @@ public class DefaultTreeViewer extends TreeViewer {
         setFocusable(true);
 
     }
-
+    /////  Jeff added
+    public TreePane getTreePane() {
+        return this.treePane;
+    }
+    /////
     public void setTree(Tree tree) {
         trees.clear();
         addTree(tree);

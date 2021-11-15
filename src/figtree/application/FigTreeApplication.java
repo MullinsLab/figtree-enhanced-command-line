@@ -53,6 +53,8 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
+import java.text.NumberFormat;
+import java.text.DecimalFormat;
 
 /**
  * Application class for FigTree including main() method for invoking it.
@@ -99,7 +101,7 @@ public class FigTreeApplication extends MultiDocApplication {
 
     }
 
-    static public void createGraphic(String graphicFormat, int width, int height, String treeFileName, String graphicFileName, Map<String, Object> settings, boolean writeNewick, boolean writeNexus, Map<String, Object> colorMap) {
+    static public void createGraphic(String graphicFormat, int width, int height, String treeFileName, String graphicFileName, Map<String, Object> cmdSettings, boolean writeNewick, boolean writeNexus, Map<String, Object> colorMap) {
 
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(treeFileName));
@@ -114,8 +116,7 @@ public class FigTreeApplication extends MultiDocApplication {
 
             Reader reader = new FileReader(treeFileName);
 
-            // Removed so that settings can be provided
-            //Map<String, Object> settings = new HashMap<String, Object>();
+            Map<String, Object> settings = new HashMap<String, Object>();
 
             ExtendedTreeViewer treeViewer = new ExtendedTreeViewer();
             ControlPalette controlPalette = new BasicControlPalette(FigTreePanel.CONTROL_PALETTE_WIDTH, BasicControlPalette.DisplayMode.ONLY_ONE_OPEN);
@@ -126,6 +127,9 @@ public class FigTreeApplication extends MultiDocApplication {
             if (settings.size() == 0) {
                 controlPalette.getSettings(settings);
             }
+
+            // Add any command line and default ordering and font size settings
+            settings.putAll(cmdSettings);
 
             List<Tree> trees = new ArrayList<Tree>();
 
@@ -168,7 +172,9 @@ public class FigTreeApplication extends MultiDocApplication {
                 }
 
             }
-            int calculatedHeight = numberOfTaxa * 8;
+            int FONT_SIZE = 8;
+            int TOP_BOTTOM_MARGIN = 46;
+            int calculatedHeight = (numberOfTaxa * FONT_SIZE) + TOP_BOTTOM_MARGIN;
             ////////////
             treeViewer.setTrees(trees);
 
@@ -411,8 +417,9 @@ public class FigTreeApplication extends MultiDocApplication {
                         new Arguments.Option("help", "option to print this message"),
                         new Arguments.Option("newickexport", "export the displayed tree in Newick format"),
                         new Arguments.Option("nexusexport", "export the displayed tree in Nexus format"),
+                        new Arguments.Option("stdout", "write the image file to stdout"),
                         new Arguments.StringOption("colors", "text:color", "comma delimited list of colors to associate with a text pattern (e.g. V704_0026_232:#3333ff) OR use the keyword 'extract' to extract from file name (expected format is hyphen delimited)"),
-                        new Arguments.StringOption("settings", "settings file name", "settings file to configure FigTree")
+                        new Arguments.IntegerOption("avg_seq_length", "average length of sequences")
                 });
 
         try {
@@ -433,20 +440,27 @@ public class FigTreeApplication extends MultiDocApplication {
         }
 
         Map<String, Object> settingsMap = new HashMap<String, Object>();
+        settingsMap.put("branchLabels.fontSize", new Double("9"));
+        settingsMap.put("trees.orderType", "increasing");
+        if (arguments.hasOption("avg_seq_length")) {
+            int seqLen = arguments.getIntegerOption("avg_seq_length");
+            double scaleR = 1.0/(double) seqLen;
+            NumberFormat formatter = new DecimalFormat("0.0E0");
+            System.out.println(formatter.format(scaleR));
+            settingsMap.put("scaleBar.scaleRange", new Double(formatter.format(scaleR)));
 
-        if (arguments.hasOption("settings")) {
-            try {
-                Reader settingsFile = new FileReader(arguments.getStringOption("settings"));
-                readSettings(settingsMap, settingsFile);
-            } catch (IOException | ImportException ex) {
-                ex.printStackTrace();
-            }
         }
 
         boolean exportNewick = false;
 
         if (arguments.hasOption("newickexport")) {
             exportNewick = true;
+        }
+
+        boolean stdout = false;
+
+        if (arguments.hasOption("stdout")) {
+            stdout = true;
         }
 
         boolean exportNexus = false;
@@ -507,7 +521,11 @@ public class FigTreeApplication extends MultiDocApplication {
                     parseColorMapFromTimePoints(colorMap, args2[0]);
                 }
                 String graphicFileName = args2[0] + ".svg";
-                createGraphic(graphicFormat, width, height, args2[0], graphicFileName, settingsMap, exportNewick, exportNexus, colorMap);
+                if (!stdout) {
+                    createGraphic(graphicFormat, width, height, args2[0], graphicFileName, settingsMap, exportNewick, exportNexus, colorMap);
+                } else {
+                    createGraphic(graphicFormat, width, height, args2[0], null, settingsMap, exportNewick, exportNexus, colorMap);
+                }
                 System.exit(0);
             } else {
                 printTitle();
@@ -661,16 +679,16 @@ public class FigTreeApplication extends MultiDocApplication {
             if (fileName.contains(File.separator)) {
                 fileName = fileName.substring(fileName.lastIndexOf(File.separator) + 1);
             }
-            System.out.println(fileName);
+            //System.out.println(fileName);
             int firstHyphen = fileName.indexOf("-");
             int lastHyphen = fileName.lastIndexOf("-");
 
             Map<Integer, Object> colorOrder = new HashMap<Integer, Object>();
-            colorOrder.put(0, Color.DARK_GRAY);
-            colorOrder.put(1, Color.RED);
+            colorOrder.put(0, Color.BLACK);
+            colorOrder.put(1, Color.BLUE);
             colorOrder.put(2, Color.MAGENTA);
-            colorOrder.put(3, Color.ORANGE);
-            colorOrder.put(4, Color.GREEN);
+            colorOrder.put(3, Color.ORANGE.darker());
+            colorOrder.put(4, Color.GREEN.darker());
 
             if (firstHyphen > 0) {
                 String temp = fileName.substring(0, firstHyphen);
@@ -683,75 +701,15 @@ public class FigTreeApplication extends MultiDocApplication {
                 //System.out.println(name);
                 String[] timepoints = temp.split("-");
                 int numPoints = timepoints.length;
+                int cnt = 0;
                 for( int i=0; i < timepoints.length; i++) {
-                    colorMap.put(name + timepoints[i], colorOrder.get(i));
-                }
-            }
-        }
-
-    }
-
-    private static void readSettings(Map<String, Object> settings, Reader reader) throws ImportException, IOException
-    {
-        ImportHelper helper = new ImportHelper(reader);
-        String command = helper.readToken(";");
-
-        while (!command.equalsIgnoreCase("END")) {
-            if (command.equalsIgnoreCase("BEGIN") || command.equalsIgnoreCase("FIGTREE")) {
-                command = helper.readToken(";");
-                continue;
-            } else if (command.equalsIgnoreCase("SET")) {
-                while (helper.getLastDelimiter() != ';') {
-                    String key = helper.readToken("=;");
-
-                    if (helper.getLastDelimiter() != '=') {
-                        throw new ImportException("Subcommand, " + key + ", is missing a value in command, " + command + ", in FIGTREE block");
+                    if (!timepoints[i].toLowerCase().contains("mod")) {
+                        colorMap.put(name + timepoints[i], colorOrder.get(cnt));
+                        cnt++;
                     }
-
-                    String value = helper.readToken(";");
-
-                    settings.put(key, parseValue(value));
                 }
-            } else {
-                throw new ImportException("Unknown command, " + command + ", in FIGTREE block");
-            }
-
-            command = helper.readToken(";");
-        }
-
-    }
-
-
-    private static Object parseValue(String value) {
-        if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
-            return new Boolean(value);
-        }
-
-        if (value.startsWith("#")) {
-            String colourValue = value.substring(1);
-            if (colourValue.startsWith("-")) {
-                // old style decimal numbers
-                try {
-                    return Color.decode(colourValue);
-                } catch (NumberFormatException nfe1) {
-                    // not a colour
-                }
-            } else {
-                return Color.decode("0x" + colourValue);
             }
         }
-
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException nfe) {
-        }
-
-        try {
-            return Double.parseDouble(value);
-        } catch (NumberFormatException nfe) {
-        }
-
-        // Simply return it as a string...
-        return value;
     }
+
 }

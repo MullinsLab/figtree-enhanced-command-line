@@ -1684,7 +1684,7 @@ public class TreePane extends JComponent implements PainterListener, Printable {
                 tipShapePainter.paint(g2, node, point, nodeShapeTransforms.get(node));
             }
         }
-
+        /////
         // Paint tip labels
         if (tipLabelPainter != null && tipLabelPainter.isVisible()) {
 
@@ -2172,27 +2172,6 @@ public class TreePane extends JComponent implements PainterListener, Printable {
                 branchLabelJustifications.put(node, just);
             }
         }
-
-        nodeShapeTransforms.clear();
-        if (nodeShapePainter != null && nodeShapePainter.isVisible()) {
-            // Iterate though the nodes
-            for (Node node : nodePoints.keySet()) {
-                Line2D shapePath = getTreeLayoutCache().getNodeShapePath(node);
-                if (shapePath != null) {
-                    nodeShapeTransforms.put(node, calculateTransform(transform, shapePath));
-                }
-            }
-        }
-        if (tipShapePainter != null && tipShapePainter.isVisible()) {
-            // Iterate though the nodes
-            for (Node node : tipPoints.keySet()) {
-                Line2D shapePath = getTreeLayoutCache().getNodeShapePath(node);
-                if (shapePath != null) {
-                    nodeShapeTransforms.put(node, calculateTransform(transform, shapePath));
-                }
-            }
-        }
-
 
         y = availableH;
         for (ScalePainter scalePainter : scalePainters) {

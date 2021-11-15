@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0907f7bf-9863-46ce-ad51-ff8822c928a9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dist/figtree.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/figtree/application/FigTreeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/figtree/application/FigTreeApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/figtree/treeviewer/DefaultTreeViewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/figtree/treeviewer/DefaultTreeViewer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/figtree/treeviewer/TreePane.java" beforeDir="false" afterPath="$PROJECT_DIR$/figtree/treeviewer/TreePane.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +62,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
