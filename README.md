@@ -4,15 +4,16 @@ https://github.com/rambaut/figtree/releases
 
 Command line FigTree summary
 
-Requirements:
+Build Requirements (for further modifying the source code):
 java 8
 
+Execution:
 A current version of figtree.jar can be found in dist/figtree.jar
 
 Example execution:
 
+Start the FigTree application and display the FigTree application frame to use in typical manual mode
 java -jar figtree.jar
-^ this will start the FigTree application and display the FigTree application frame to use in typical manual mode.
 
 To use as part of a pipeline (or run command line) you will need to create a settings file:
 
@@ -33,9 +34,11 @@ Easiest way to execute multiple files in a directory with a single settings file
 	- coloring will occur automatically for each time point found
 
 Single file execution:
+
 java -jar figtree.jar -settings YOUR_SETTING_NAME.settings -colors extract -newickexport -nexusexport -graphic SVG -height 768 -width 783 PATH_TO_FILE
 
 Batch execution of files in a folder using the same settings file:
+
 find ./RESULTS_FOLDER_NAME/ -name '*phyml_tree.tre' -type f | awk '{print "java -jar figtree.jar -settings YOUR_SETTING_NAME.settings -colors extract -newickexport -nexusexport -graphic SVG -height 768 -width 783 "$0}' |sh
 
 ^ This command finds all files that include '*phyml_tree.tre' in their name, then prepends "java -jar figtree.jar -settings GP.settings -colors extract -newickexport -nexusexport -graphic SVG -height 768 -width 783 " to the path to each file that is listed.  The "|sh" on the end of the command causes the execution of each line.  If you run the command without the "|sh" you can see the lines that are built without executing them.
@@ -57,10 +60,13 @@ java -jar figtree.jar
 
 
 Alternative example execution with manual color pattern match settings and output file naming:
+
 Using the example above, TEST4_2315_160-161-170_GP_544353459373.sequence.txt_phyml_tree.tre, we can set the colors for the time points in a string for the -colors option:
+
 e.g. -colors TEST4_2315_160:#3333ff,TEST4_2315_161:#ff33ff,TEST4_2315_170:##66ff66
 
 To execute:
+
 java -jar figtree.jar -settings YOUR_SETTING_NAME.settings -colors TEST4_2315_160:#3333ff,TEST4_2315_161:#ff33ff,TEST4_2315_170:##66ff66 -newickexport -nexusexport -graphic SVG -height 768 -width 783 TEST4_2315_160-161-170_GP_544353459373.sequence.txt_phyml_tree.tre TEST4_2315_160-161-170_GP_544353459373.sequence.txt_phyml_tree.svg
 
 
