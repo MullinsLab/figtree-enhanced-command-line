@@ -127,8 +127,7 @@ public class FigTreeApplication extends MultiDocApplication {
             if (settings.size() == 0) {
                 controlPalette.getSettings(settings);
             }
-
-            // Add any command line and default ordering and font size settings
+            // Add any command line, default ordering and font size settings
             settings.putAll(cmdSettings);
 
             List<Tree> trees = new ArrayList<Tree>();
@@ -441,14 +440,14 @@ public class FigTreeApplication extends MultiDocApplication {
 
         Map<String, Object> settingsMap = new HashMap<String, Object>();
         settingsMap.put("branchLabels.fontSize", new Double("9"));
+        settingsMap.put("trees.order", true);
         settingsMap.put("trees.orderType", "increasing");
         if (arguments.hasOption("avg_seq_length")) {
             int seqLen = arguments.getIntegerOption("avg_seq_length");
             double scaleR = 1.0/(double) seqLen;
             NumberFormat formatter = new DecimalFormat("0.0E0");
-            System.out.println(formatter.format(scaleR));
+            settingsMap.put("scaleBar.automaticScale", false);
             settingsMap.put("scaleBar.scaleRange", new Double(formatter.format(scaleR)));
-
         }
 
         boolean exportNewick = false;
